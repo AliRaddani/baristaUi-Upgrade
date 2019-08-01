@@ -23,21 +23,21 @@ export class BaristaService {
     };
     return this.http.get<any>(url + '/api/cluster', options).pipe(
       take(1),
-      map(Plugin => {
+      map(cluster => {
         this.initClusters();
-        if (this.clusters.findIndex(clust => clust.name === Plugin.Name) >= 0) {
+        if (this.clusters.findIndex(clust => clust.name === cluster.Name) >= 0) {
           return null;
         } else {
-          const cluster = new ClusterModel({ name: Plugin.Name, endPoint: url });
-          if (Plugin.Nodes) {
-            Plugin.Nodes.forEach(resultNode => {
+          const myCluster = new ClusterModel({ name: cluster.Name, endPoint: url });
+          if (cluster.Nodes) {
+            cluster.Nodes.forEach(resultNode => {
               const node = new NodeModel({ hostName: resultNode.HostName, port: resultNode.Port });
-              cluster.addNode(node);
+              myCluster.addNode(node);
             });
-            this.clusters.push(cluster);
+            this.clusters.push(myCluster);
             this.storage.set(this.storageClusterName, this.clusters);
           }
-          return cluster;
+          return myCluster;
         }
       }));
   }
@@ -51,9 +51,9 @@ export class BaristaService {
 
     return this.http.get<any>(url, options).pipe(
       take(1),
-      map((Plugin: Array<any>) => {
+      map((clusterPlugins: Array<any>) => {
         const plugins: Array<PluginModel> = [];
-        Plugin.forEach(resultPlugin => {
+        clusterPlugins.forEach(resultPlugin => {
           const plugin = new PluginModel({ name: resultPlugin.Name });
           if (resultPlugin.Nodes) {
 
@@ -66,11 +66,11 @@ export class BaristaService {
 
                 const diagnostics = new DiagnosticsPluginModel({
                   memoryUtilizationPercentage: resultNode.
-                    Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultNode.Diagnostics.MemoryUtilizationPercentage : {},
+                    Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultNode.Diagnostics.MemoryUtilizationPercentage : null,
                   pluginDiskUsage: resultNode.
-                    Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultNode.Diagnostics.PluginDiskUsage : {},
+                    Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultNode.Diagnostics.PluginDiskUsage : null,
                   deploymentDiskUsage: resultNode.
-                    Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultNode.Diagnostics.DeploymentDiskUsage : {}
+                    Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultNode.Diagnostics.DeploymentDiskUsage : null
                 });
                 plugin.diagnostics = diagnostics;
               }
@@ -94,10 +94,10 @@ export class BaristaService {
 
     return this.http.get<any>(url, options).pipe(
       take(1),
-      map((Plugin: Array<any>) => {
+      map((clusterNodePlugins: Array<any>) => {
         const plugins: Array<PluginModel> = [];
 
-        Plugin.forEach(resultPlugin => {
+        clusterNodePlugins.forEach(resultPlugin => {
           const plugin = new PluginModel({
             name: resultPlugin.Name, status: resultPlugin.Status, version: resultPlugin.Version
           });
@@ -106,11 +106,11 @@ export class BaristaService {
 
             const diagnostics = new DiagnosticsPluginModel({
               memoryUtilizationPercentage: resultPlugin.
-                Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultPlugin.Diagnostics.MemoryUtilizationPercentage : {},
+                Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultPlugin.Diagnostics.MemoryUtilizationPercentage : null,
               pluginDiskUsage: resultPlugin.
-                Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultPlugin.Diagnostics.PluginDiskUsage : {},
+                Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultPlugin.Diagnostics.PluginDiskUsage : null,
               deploymentDiskUsage: resultPlugin.
-                Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultPlugin.Diagnostics.DeploymentDiskUsage : {}
+                Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultPlugin.Diagnostics.DeploymentDiskUsage : null
             });
             plugin.diagnostics = diagnostics;
           }
