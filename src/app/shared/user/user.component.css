@@ -1,0 +1,36 @@
+
+
+/*.user {
+    position: absolute;
+    height: 100%;
+    max-height: 60px;
+    top: 0;
+    right: 15px;
+    padding: 12px 15px 10px 15px;
+    color: #eceeef;
+    background: #2d353c;
+}
+    .user-img {
+      height: 31px;
+    
+  }
+  */
+
+  .user {
+    position: absolute;
+    height: 100%;
+    max-height: 60px;
+    top: 0;
+    right: 0px;
+    padding: 12px 15px 10px 10px;
+    color: #eceeef;
+    background-color: #2d353c;
+    border-bottom:4px solid #57c5a5;
+  }
+  .avatar {
+   
+    width: 80px;
+   
+  }
+ 
+  

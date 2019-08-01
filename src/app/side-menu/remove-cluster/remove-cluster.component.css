@@ -1,0 +1,33 @@
+
+  
+ .btn{
+   background-color:#57c5a5;
+   margin-bottom:20px;
+   float:right;
+   color:white;
+ 
+}
+#dropdown{
+  background-color : #3c4a52;
+  color:white;
+  border:none;
+ 
+}
+ 
+ #dropdown:active{
+  outline: none;
+
+ } 
+  .form{
+    background-color:#2d353c;
+    color:white;
+    padding-top:30px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .btn:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }

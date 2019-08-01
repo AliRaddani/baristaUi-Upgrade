@@ -1,0 +1,58 @@
+<div class="side-menu">
+    <div id="accordion">
+        <app-cluster (clickClusterPlugins)="getClusterPlugins($event)" (clickNodePlugins)="getNodePlugins($event)"   [clusters]="clusters"  ></app-cluster>
+        <div class="accordion-section">
+            <div class="section-header  deploybtn">
+                <a class="anker" href=""> <i class="fa fa-cloud"></i>
+                    <span>&nbsp;&nbsp;&nbsp;Deploy</span></a>
+            </div>
+        </div>
+
+        <div class="accordion-section open " data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+            aria-controls="collapseTwo" (click)="accordianTwoClicked  = !accordianTwoClicked">
+
+            <div class="section-header">
+                <i aria-hidden="true" class="fa fa-lg fa-plus-circle"></i>
+                <span>&nbsp;&nbsp;&nbsp;Add Cluster  </span>
+                <i class="fa fa-lg   text-primary-alt pull-right  arrow"
+                    [ngClass]="{'fa-caret-down' : !accordianTwoClicked, 'fa-caret-up': accordianTwoClicked}"></i>
+            </div>
+        </div>
+
+        <div class="section-detail  " id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+            data-parent="#accordion">
+            <div class="form">
+                <fieldset class="form-group   ">
+
+                    <input class="form-control   fld" [(ngModel)]="hostName" maxlength="260" placeholder="Host Name"
+                        type="text">
+                </fieldset>
+                <fieldset class="form-group  ">
+                    <input class="form-control   fld "[value]="port" [(ngModel)]="port" maxlength="4" placeholder="8080" type="text">
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <button class="btn  btn-alt pull-right" (click)="addCluster()" >Connect</button>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="accordion-section " data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+            aria-controls="collapseThree" (click)="accordianThreeClicked = !accordianThreeClicked ">
+
+            <div class="section-header">
+                <i class="fa fa-lg fa-minus-circle"></i>
+                <span>&nbsp;&nbsp;&nbsp;Remove Cluster</span>
+                <i class="fa fa-lg  text-primary-alt pull-right  arrow"
+                    [ngClass]="{'fa-caret-down' : !accordianThreeClicked , 'fa-caret-up': accordianThreeClicked }"></i>
+
+            </div>
+        </div>
+
+        <div class="section-detail" id="collapseThree" class="collapse" aria-labelledby="headingThree"
+            data-parent="#accordion">
+
+            <app-remove-cluster></app-remove-cluster>
+        </div>
+    </div>
+</div>

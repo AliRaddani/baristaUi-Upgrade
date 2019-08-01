@@ -1,0 +1,23 @@
+
+<div *ngFor=" let cluster of clusters">
+
+    <div class="accordion-section " data-toggle="collapse" data-target="#collapse1" aria-expanded="false "
+        aria-controls="collapse1" (click)="accordianClicked  = !accordianClicked" (click)="clusterClick(cluster)">
+        <li style="list-style-type: none;">
+            <i aria-hidden="true" class="fa fa-lg fa-sitemap"></i>
+            <span>&nbsp;&nbsp;{{cluster.name}}</span>
+            <i class="fa fa-lg  text-primary-alt pull-right arrow"
+                [ngClass]="{'fa-caret-down' : accordianClicked, 'fa-caret-up': !accordianClicked }"></i>
+        </li>
+    </div>
+
+    <div>
+
+        <div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion">
+            <li class="detail-section" *ngFor=" let node of cluster.nodes"   (click)= "nodeClick(cluster, node)" >
+                <span class=" fa fa-cubes  cubes"> &nbsp;</span>
+                <i aria-hidden="true">{{node.hostName}} </i>
+            </li>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+.side-menu {
+  height: 1200px;
+  background-color: #2f3e47;
+  width: 16.7%;
+  padding: 0;
+  color: #eceeef;
+  background: #2f3e47;
+  overflow-y: auto;
+  font-size: 16.5px;
+}
+
+.accordion-section {
+  border-bottom: solid 1px #2d353c;
+  padding-bottom: 15px;
+  padding-left: 12px;
+  padding-top: 5px;
+  cursor: pointer;
+  background-color: #2f3e47;
+}
+
+.accordion-section:hover {
+  background-color: darkslategray;
+}
+.accordion-section:focus{
+  border:solid 1px blue;
+}
+
+.side-menu:focus {
+  border: green;
+}
+
+.arrow {
+  float: right;
+  padding-right: 15px;
+  color: #57c5a5;
+  padding-top: 5px;
+}
+
+.form {
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: #2d353c;
+  padding-top: 30px;
+}
+
+.btn {
+  float: right;
+  background-color: #57c5a5;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.btn:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.fld {
+  background-color: #3c4a52;
+  border: none;
+  color: white;
+}
+
+.anker {
+  text-decoration: none;
+  color: white;
+}
+
+@media only screen and (max-width: 1200px) {
+  .side-menu {
+    min-width: 300px;
+  }
+}

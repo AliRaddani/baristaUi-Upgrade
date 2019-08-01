@@ -1,0 +1,38 @@
+.div {
+  background-color: #2d353c;
+}
+
+.detail-section:hover {
+  cursor: pointer;
+  background-color: darkslategray;
+}
+
+.detail-section {
+  border-bottom: solid 1px   #2f3e47;
+  padding: 8px;
+  list-style-type: none;
+  background: #2d353c;
+  padding-left: 22px;
+  font-style: italic;
+}
+
+.accordion-section {
+  margin-bottom: 0px;
+  border-bottom: solid 1px #2d353c;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-top: 5px;
+  cursor: pointer;
+  background-color: #2f3e47;
+}
+
+.arrow {
+  float: right;
+  padding-right: 15px;
+  color: #57c5a5;
+  padding-top: 5px;
+}
+
+.accordion-section:hover {
+  background-color: darkslategray;
+}
