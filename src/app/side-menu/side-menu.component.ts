@@ -40,7 +40,7 @@ export class SideMenuComponent implements OnInit {
 
   getNodePlugins(event) {
 
-    this.baristaService.getNodePlugins$(event.cluster, event.node).subscribe(data => console.log(data));
+    this.baristaService.getNodePlugins$(event.cluster, event.node).subscribe();
   }
   private getFormatedUrl(host: string, port: string): string {
     const url = host.replace(/(.*?:\/\/)|(\/)/g, '');
