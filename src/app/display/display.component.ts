@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BaristaService } from '../services/barista.service';
 
 @Component({
   selector: 'app-display',
@@ -7,15 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DisplayComponent implements OnInit {
 
-  constructor() { }
+  public plugins: Array<any> = [];
+
+  constructor(private baristaService: BaristaService) { }
 
   ngOnInit() {
   }
-  displayPlugins() {
 
-    this.plugins = this.baristaService. pluginsForDisplay();
-    console.log(this.plugins);
-   }
-   
+displayPlugins() {
+
+ this.plugins = this.baristaService. pluginsForDisplay();
+ console.log(this.plugins);
+}
 
 }
