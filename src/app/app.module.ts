@@ -10,6 +10,7 @@ import { ClusterComponent } from './side-menu/cluster/cluster.component';
 import { RemoveClusterComponent } from './side-menu/remove-cluster/remove-cluster.component';
 import { HttpClientModule } from '@angular/common/Http';
 import { BaristaService } from './services/barista.service';
+import { DisplayComponent } from './display/display.component';
 
 
 
@@ -21,7 +22,8 @@ import { BaristaService } from './services/barista.service';
     SearchComponent,
     UserComponent,
     ClusterComponent,
-    RemoveClusterComponent
+    RemoveClusterComponent,
+    DisplayComponent
   ],
   imports: [
     BrowserModule,
