@@ -11,5 +11,11 @@ export class DisplayComponent implements OnInit {
 
   ngOnInit() {
   }
+  displayPlugins() {
+
+    this.plugins = this.baristaService. pluginsForDisplay();
+    console.log(this.plugins);
+   }
+   
 
 }
