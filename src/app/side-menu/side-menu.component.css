@@ -7,6 +7,8 @@
   background: #2f3e47;
   overflow-y: auto;
   font-size: 16.5px;
+  display: inline-block;
+  
 }
 
 .accordion-section {
