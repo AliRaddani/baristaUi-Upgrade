@@ -16,6 +16,7 @@ export class BaristaService {
   private storageClusterName = 'clusters';
   public clusters: Array<ClusterModel> = null;
   constructor(private http: HttpClient, private storage: StorageService) { }
+  public plugins: Array<PluginModel> = [];
 
   getCluster$(url: string): Observable<ClusterModel> | null {
     const options = {
@@ -23,21 +24,21 @@ export class BaristaService {
     };
     return this.http.get<any>(url + '/api/cluster', options).pipe(
       take(1),
-      map(cluster => {
+      map(Plugin => {
         this.initClusters();
-        if (this.clusters.findIndex(clust => clust.name === cluster.Name) >= 0) {
+        if (this.clusters.findIndex(clust => clust.name === Plugin.Name) >= 0) {
           return null;
         } else {
-          const myCluster = new ClusterModel({ name: cluster.Name, endPoint: url });
-          if (cluster.Nodes) {
-            cluster.Nodes.forEach(resultNode => {
+          const cluster = new ClusterModel({ name: Plugin.Name, endPoint: url });
+          if (Plugin.Nodes) {
+            Plugin.Nodes.forEach(resultNode => {
               const node = new NodeModel({ hostName: resultNode.HostName, port: resultNode.Port });
-              myCluster.addNode(node);
+              cluster.addNode(node);
             });
-            this.clusters.push(myCluster);
+            this.clusters.push(cluster);
             this.storage.set(this.storageClusterName, this.clusters);
           }
-          return myCluster;
+          return cluster;
         }
       }));
   }
@@ -51,9 +52,9 @@ export class BaristaService {
 
     return this.http.get<any>(url, options).pipe(
       take(1),
-      map((clusterPlugins: Array<any>) => {
-        const plugins: Array<PluginModel> = [];
-        clusterPlugins.forEach(resultPlugin => {
+      map((Plugin: Array<any>) => {
+
+        Plugin.forEach(resultPlugin => {
           const plugin = new PluginModel({ name: resultPlugin.Name });
           if (resultPlugin.Nodes) {
 
@@ -66,11 +67,11 @@ export class BaristaService {
 
                 const diagnostics = new DiagnosticsPluginModel({
                   memoryUtilizationPercentage: resultNode.
-                    Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultNode.Diagnostics.MemoryUtilizationPercentage : null,
+                    Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultNode.Diagnostics.MemoryUtilizationPercentage : {},
                   pluginDiskUsage: resultNode.
-                    Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultNode.Diagnostics.PluginDiskUsage : null,
+                    Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultNode.Diagnostics.PluginDiskUsage : {},
                   deploymentDiskUsage: resultNode.
-                    Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultNode.Diagnostics.DeploymentDiskUsage : null
+                    Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultNode.Diagnostics.DeploymentDiskUsage : {}
                 });
                 plugin.diagnostics = diagnostics;
               }
@@ -78,10 +79,10 @@ export class BaristaService {
               plugin.nodes = pluginNodes;
             });
           }
-          plugins.push(plugin);
+          this.plugins.push(plugin);
 
         });
-        return plugins;
+        return this.plugins;
       }));
   }
 
@@ -94,10 +95,8 @@ export class BaristaService {
 
     return this.http.get<any>(url, options).pipe(
       take(1),
-      map((clusterNodePlugins: Array<any>) => {
-        const plugins: Array<PluginModel> = [];
-
-        clusterNodePlugins.forEach(resultPlugin => {
+      map((Plugin: Array<any>) => {
+        Plugin.forEach(resultPlugin => {
           const plugin = new PluginModel({
             name: resultPlugin.Name, status: resultPlugin.Status, version: resultPlugin.Version
           });
@@ -106,20 +105,25 @@ export class BaristaService {
 
             const diagnostics = new DiagnosticsPluginModel({
               memoryUtilizationPercentage: resultPlugin.
-                Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultPlugin.Diagnostics.MemoryUtilizationPercentage : null,
+                Diagnostics.hasOwnProperty('MemoryUtilizationPercentage') ? resultPlugin.Diagnostics.MemoryUtilizationPercentage : {},
               pluginDiskUsage: resultPlugin.
-                Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultPlugin.Diagnostics.PluginDiskUsage : null,
+                Diagnostics.hasOwnProperty('PluginDiskUsage') ? resultPlugin.Diagnostics.PluginDiskUsage : {},
               deploymentDiskUsage: resultPlugin.
-                Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultPlugin.Diagnostics.DeploymentDiskUsage : null
+                Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultPlugin.Diagnostics.DeploymentDiskUsage : {}
             });
             plugin.diagnostics = diagnostics;
           }
-          plugins.push(plugin);
+          this.plugins.push(plugin);
 
         });
-        return plugins;
+        return this.plugins;
 
       }));
+  }
+
+  pluginsForDisplay() {
+
+    return this.plugins;
   }
 
   getClusters() {
