@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaristaService } from '../services/barista.service';
+import { PluginModel } from '../models/plugin.model';
+import { PluginNodeModel } from '../models/pluginNode.model';
 
 @Component({
   selector: 'app-display',
@@ -8,17 +10,35 @@ import { BaristaService } from '../services/barista.service';
 })
 export class DisplayComponent implements OnInit {
 
-  public plugins: Array<any> = [];
-
   constructor(private baristaService: BaristaService) { }
 
+  public plugins: Array<PluginModel> = [];
+  isCluster = true;
+  title: string;
+  version: string;
+  pName: string;
+  showWidget = false;
+
   ngOnInit() {
+
   }
 
-displayPlugins() {
+  displayPlugins() {
+    this.plugins = this.baristaService.pluginsForDisplay();
+    if (this.isCluster) {
+      this.title = 'Cluster';
+      this.pName = this.plugins[0].clusterName;
 
- this.plugins = this.baristaService. pluginsForDisplay();
- console.log(this.plugins);
+    } else {
+      this.title = 'Node';
+      this.pName = this.plugins[0].node.hostName;
+    }
+
+  }
+  formatTitle(pluginName: string): string {
+    return pluginName.replace('ASI.Barista.Plugins.', '');
+  }
+
 }
 
-}
+

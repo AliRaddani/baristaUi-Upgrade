@@ -6,6 +6,9 @@
     color: #eceeef;
     padding-top: 10px;
     padding-left: 13px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    overflow: hidden;
 }
 
 .header-title {
@@ -13,6 +16,7 @@
     font-size: 21px;
     font-weight: 450;
     padding-left: 10px;
+    font-family: Helvetica, Helvetica, Arial, sans-serif;
 }
 
 .logo {

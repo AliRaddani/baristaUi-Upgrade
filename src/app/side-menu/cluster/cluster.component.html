@@ -7,14 +7,14 @@
             <i aria-hidden="true" class="fa fa-lg fa-sitemap"></i>
             <span>&nbsp;&nbsp;{{cluster.name}}</span>
             <i class="fa fa-lg  text-primary-alt pull-right arrow"
-                [ngClass]="{'fa-caret-down' : accordianClicked, 'fa-caret-up': !accordianClicked }"></i>
+                [ngClass]="{'fa-caret-down' : !accordianClicked, 'fa-caret-up': accordianClicked }"></i>
         </li>
     </div>
 
     <div>
 
         <div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion">
-            <li class="detail-section" *ngFor=" let node of cluster.nodes"   (click)= "nodeClick(cluster, node)" >
+            <li class="detail-section" *ngFor=" let node of cluster.nodes"   (click)= "nodeClick(node)" >
                 <span class=" fa fa-cubes  cubes"> &nbsp;</span>
                 <i aria-hidden="true">{{node.hostName}} </i>
             </li>

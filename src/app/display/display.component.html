@@ -1,7 +1,104 @@
+<div id="div-display">
+
+        <div id="div">
+                <h3>{{title}}</h3>
+                <h6 id="clusterName">{{pName}}</h6>
+                <button id="btn-refresh" (click)="displayPlugins()">
+                        <i  class='fas fa-sync' style='font-size:26px;color:rgb(97, 97, 97)'></i></button>
+        </div>
+        <br><br><br>
+        <div *ngFor="let plugin of plugins">
+                <div class="container-fixed  plugins">
+                        <div class=" row">
+                                <div class="col-7 "> <i class="fa fa-lg fa-plug   " aria-hidden="true"
+                                                style="color:#57c5a5; padding-left: 10px;"></i>
+                                        <span id="pluginName"><strong>{{plugin.name}}</strong></span></div>
+                                <div class="col-1"> <span
+                                                [ngStyle]="{'color':plugin.status === 'Running' ? 'rgb(92, 184, 92)': '#6a6b6b' }">{{plugin.status}}</span>
+                                </div>
+                                <div class="col-3" style=" color: #818a91;"
+                                        [ngStyle]="{'visibility':plugin.status ==='Deployed' || plugin.status ==='Offline' ? 'hidden' : 'visible' }">
+                                        Version: {{plugin.version}}</div>
+                                <div class="col-1"
+                                        [ngStyle]="{'visibility':plugin.status ==='Deployed' || plugin.status ==='Offline' ? 'hidden' : 'visible' }">
+                                        <i (click)="showWidget = !showWidget"  
+                                         class="fa fa-lg  arrow"
+                                                [ngClass]="{'fa-caret-down' : !showWidget, 'fa-caret-up' : showWidget }"></i>
+                                </div>
+                        </div>
+
+                </div>
+                <div *ngIf="showWidget" class="widget">
+
+                        <ng-template #pluginNode>
+                                <div class="divTables">
+
+                                        <table   *ngIf=" plugin.version !== undefined &&  plugin.status ==='Running' ">
+                                                <thead style=" background-color:#179de2;  ">
+                                                        <tr>
+                                                                <th colspan="2">{{formatTitle(plugin.name)}}</th>
+                                                        </tr>
+                                                </thead>
+                                        
+                                                <tbody>
+                                                        <tr>
+                                                                <td style=" background-color:#179de2;">
+                                                                        <i class="fas fa-3x fa-tachometer-alt"
+                                                                                style=" padding: 10px; padding-left:32px;
+                                                                                                height: 100%; color:#fff;"></i>
+                                                                </td>
+                                                                <td style=" background-color: #58bbee; padding-left:15px;"
+                                                                        *ngIf="plugin.hasOwnProperty('diagnostics')">
+                                                                        <h5 class="m-a-0"><span>Utilized:</span>
+                                                                                {{plugin.diagnostics.memoryUtilizationPercentage}}
+                                                                        </h5>
+                                                                        <div>Disk:
+                                                                                {{plugin.diagnostics.pluginDiskUsage}}
+                                                                        </div>
+                                                                        <div>Deploy:
+                                                                                {{plugin.diagnostics.deploymentDiskUsage}}
+                                                                        </div>
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </div>
+                        </ng-template>
+                        <ng-container *ngIf="plugin.hasOwnProperty('nodes') else pluginNode">
+                                <div class="divTables" *ngFor=" let node of plugin.nodes">
+
+                                        <table class="table table-striped"  *ngIf=" node.version !== undefined &&  node.status ==='Running' ">
+                                                <thead>
+                                                        <tr>
+                                                                <th colspan="2">{{node.node}}</th>
+                                                        </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <tr>
+                                                                <td style=" background-color:#179de2;">
+                                                                        <i class="fas fa-3x fa-tachometer-alt"
+                                                                                style=" padding: 10px;
+                                                                      padding-left:32px;  height: 100%; color:#fff;"></i>
+                                                                </td>
+                                                                <td style=" background-color: #58bbee; padding-left:15px;"
+                                                                        *ngIf="node.hasOwnProperty('diagnostics')">
+                                                                        <h5 class="m-a-0"><span>Utilized:</span>
+                                                                                {{node.diagnostics.memoryUtilizationPercentage}}
+                                                                        </h5>
+                                                                        <div>Disk: {{node.diagnostics.pluginDiskUsage}}
+                                                                        </div>
+                                                                        <div>Deploy:
+                                                                                {{node.diagnostics.deploymentDiskUsage}}
+                                                                        </div>
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </div>
+                        </ng-container>
+                </div>
+
+        </div>
 
 
-
-<div id ="div">
-    <p>Plugins</p>
-    <button class=" btn btn-primary" (click)= "displayPlugins() ">refresh</button>
 </div>

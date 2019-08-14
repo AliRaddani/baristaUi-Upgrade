@@ -26,10 +26,14 @@
     color: #eceeef;
     background-color: #2d353c;
     border-bottom:4px solid #57c5a5;
+    width:210px;
+    font-family:Helvetica ,Helvetica,Arial,sans-serif;
+
   }
   .avatar {
-   
+   padding-right:0px;
     width: 80px;
+    
    
   }
  

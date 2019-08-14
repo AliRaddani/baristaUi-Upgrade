@@ -1,30 +1,27 @@
 .side-menu {
-  height: 1200px;
-  background-color: #2f3e47;
+  height: 1024px;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   width: 16.7%;
   padding: 0;
   color: #eceeef;
   background: #2f3e47;
   overflow-y: auto;
-  font-size: 16.5px;
+  font-size: 15.7px;
   display: inline-block;
-  
+  overflow: auto;
 }
 
 .accordion-section {
   border-bottom: solid 1px #2d353c;
   padding-bottom: 15px;
   padding-left: 12px;
-  padding-top: 5px;
+  padding-top: 8px;
   cursor: pointer;
   background-color: #2f3e47;
 }
 
 .accordion-section:hover {
   background-color: darkslategray;
-}
-.accordion-section:focus{
-  border:solid 1px blue;
 }
 
 .side-menu:focus {

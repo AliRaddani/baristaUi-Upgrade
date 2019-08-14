@@ -7,9 +7,9 @@ import { BaristaService } from '../services/barista.service';
   styleUrls: ['./side-menu.component.css']
 })
 export class SideMenuComponent implements OnInit {
-  accordianThreeClicked = true;
-  accordianTwoClicked = true;
-  hostName = 'hostName';
+  accordianThreeClicked = false;
+  accordianTwoClicked = false;
+  hostName = '';
   port = '8080';
   private clusterEndpoints: any = [];
   clusters: any = [];
@@ -40,7 +40,7 @@ export class SideMenuComponent implements OnInit {
 
   getNodePlugins(event) {
 
-    this.baristaService.getNodePlugins$(event.cluster, event.node).subscribe();
+    this.baristaService.getNodePlugins$(event).subscribe();
   }
   private getFormatedUrl(host: string, port: string): string {
     const url = host.replace(/(.*?:\/\/)|(\/)/g, '');

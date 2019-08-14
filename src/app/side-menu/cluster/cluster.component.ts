@@ -9,7 +9,7 @@ import { NodeModel } from 'src/app/models/node.model';
 })
 export class ClusterComponent implements OnInit {
 
-  accordianClicked = true;
+  accordianClicked = false;
 
   constructor() { }
 
@@ -17,16 +17,12 @@ export class ClusterComponent implements OnInit {
   @Output() clickClusterPlugins = new EventEmitter<object>();
   @Output() clickNodePlugins = new EventEmitter<object>();
 
+  nodeClick(node: NodeModel) {
 
-  nodeClick(cluster: ClusterModel, node: NodeModel) {
-    const obj = {
-      cluster: cluster,
-      node: node
-    };
-    this.clickNodePlugins.emit(obj);
-   }
+    this.clickNodePlugins.emit(node);
+  }
 
-   clusterClick(cluster: ClusterModel) {
+  clusterClick(cluster: ClusterModel) {
 
     this.clickClusterPlugins.emit(cluster);
   }

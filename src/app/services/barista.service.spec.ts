@@ -56,20 +56,20 @@ describe('BaristaService', () => {
         expect(plugins[0].name).toBe('ASI.Barista.Plugins.AdAudit.AuditWriter.Plugin');
         expect(plugins[0].nodes[0].version).toBe('20190723-2242');
         expect(plugins[0].nodes[0].status).toBeTruthy();
-        expect(plugins[0].nodes[0].diagnostics).toBeTruthy();
-        expect(plugins[0].nodes[1].diagnostics.deploymentDiskUsage).toBe('7.49 MB');
-        expect(plugins[0].nodes[1].diagnostics.pluginDiskUsage).toBe('170.49 MB');
-        expect(plugins[0].nodes[1].diagnostics.memoryUtilizationPercentage).toBe('10 %');
+        expect(plugins[1].nodes[0].diagnostics).toBeTruthy();
+        expect(plugins[1].nodes[0].diagnostics.deploymentDiskUsage).toBe('15.52 MB');
+        expect(plugins[1].nodes[0].diagnostics.pluginDiskUsage).toBe('15.52 MB');
+        expect(plugins[1].nodes[0].diagnostics.memoryUtilizationPercentage).toBe('0 %');
       });
       const node = new NodeModel({ hostName: 'test', port: 80 });
-      baristaService.getNodePlugins$(cluster, node).subscribe(plugins => {
+      baristaService.getNodePlugins$(node).subscribe(plugins => {
         expect(plugins).toBeTruthy();
-        expect(plugins.length).toBe(1);
-        expect(plugins[0].name).toBe('ASI.Barista.Plugins.BulkEmail.BulkEmailPlugin');
-        expect(plugins[0].nodes[0].version).toBe('20190118-1004');
-        expect(plugins[1].nodes[0].status).toBeTruthy();
+        expect(plugins.length).toBe(3);
+        expect(plugins[0].name).toBe('ASI.Barista.Plugins.AdAudit.AuditWriter.Plugin');
+        expect(plugins[0].nodes[0].version).toBe('20190723-2242');
+        expect(plugins[0].nodes[0].status).toBeTruthy();
         expect(plugins[0].nodes[0].diagnostics).toBeTruthy();
-        expect(plugins[0].nodes[0].diagnostics.deploymentDiskUsage).toBe('7.49 MB');
+        expect(plugins[0].nodes[0].diagnostics.deploymentDiskUsage).toBe('15.75 MB');
       });
 
 

@@ -1,8 +1,117 @@
-#div{
+#div-display {
     display: inline-block;
+    position: fixed;
+    background-color: #efefef;
+    width: 86%;
+    height: 1024px;
+    overflow: auto;
+}
+
+#div {
+    background-color: #f6f8f7;
+    width: 100%;
+    height: 63px;
+    position: fixed;
+    padding-bottom: 10px;
+    color: #6a6b6b;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .3);
+    z-index: 1;
+}
+
+#pluginName {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    padding-left: 20px;
+    font-weight: 400;
+    -webkit-tap-highlight-color: transparent;
+    color: rgb(102, 101, 101);
+}
+
+#clusterName {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    padding-left: 190px;
+    color: #57c5a5;
+    margin-bottom: 10px;
+}
+
+#btn-refresh {
     position: absolute;
-   
+    margin-left: 1325px;
+    height: 64px;
+    top: 0px;
+    background-color: transparent;
+    border: solid #f6f8f7;
+    width: 70px;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+}
 
-   
+.plugins {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    height: 48px;
+    width: 74%;
+    background-color: #f6f8f7;
+    margin-left: 198px;
+    margin-top: 33px;
+    padding: 13px;
+    cursor: pointer;
+}
 
+h3 {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    padding-left: 190px;
+    font-weight: 400;
+    -webkit-tap-highlight-color: transparent;
+    color: rgb(102, 101, 101);
+    font-size: 1.75rem;
+    padding-top: 5px;
+    padding-bottom: 0px;
+}
+
+.arrow {
+    float: right;
+    padding-right: 15px;
+    color: #57c5a5;
+    font-size: 32px;
+}
+
+.widget {
+    margin-left: 198px;
+    width: 74%;
+    height: 180px;
+    background-color: #fff;
+}
+
+table {
+    width: 355px;
+    margin-left: 20px;
+    margin-top: 20px;
+    float: left;
+    color: white;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+}
+
+.divTables {
+    margin-left: 40px;
+}
+
+thead th {
+    background-color: #179de2;
+    padding: 2px;
+    height: 30px;
+    padding-left: 9px;
+    font-weight: normal;
+    border-bottom: solid 1px white;
+}
+.selected{
+    visibility: visible;
+
+}
+
+@media only screen and (max-width: 1200px) {
+    #btn-refresh {
+        margin-left: 300px;
+    }
 }
