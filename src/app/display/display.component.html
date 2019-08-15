@@ -28,51 +28,13 @@
 
                         </div>
                         <div *ngIf="selectedIndex === i" class="widget">
-
-                                <ng-template #pluginNode>
-                                        <div class="divTables">
-
-                                                <table
-                                                        *ngIf=" plugin.version !== undefined &&  plugin.status ==='Running' ">
-                                                        <thead style=" background-color:#179de2;  ">
-                                                                <tr>
-                                                                        <th colspan="2">{{formatTitle(plugin.name)}}
-                                                                        </th>
-                                                                </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                                <tr>
-                                                                        <td style=" background-color:#179de2;">
-                                                                                <i class="fas fa-3x fa-tachometer-alt"
-                                                                                        style=" padding: 10px; padding-left:32px;
-                                                                                                height: 100%; color:#fff;"></i>
-                                                                        </td>
-                                                                        <td style=" background-color: #58bbee; padding-left:15px;"
-                                                                                *ngIf="plugin.hasOwnProperty('diagnostics')">
-                                                                                <h5 class="m-a-0"><span>Utilized:</span>
-                                                                                        {{plugin.diagnostics.memoryUtilizationPercentage}}
-                                                                                </h5>
-                                                                                <div>Disk:
-                                                                                        {{plugin.diagnostics.pluginDiskUsage}}
-                                                                                </div>
-                                                                                <div>Deploy:
-                                                                                        {{plugin.diagnostics.deploymentDiskUsage}}
-                                                                                </div>
-                                                                        </td>
-                                                                </tr>
-                                                        </tbody>
-                                                </table>
-                                        </div>
-                                </ng-template>
-                                <ng-container *ngIf="plugin.hasOwnProperty('nodes') else pluginNode">
                                         <div class="divTables" *ngFor=" let node of plugin.nodes">
 
                                                 <table class="table table-striped"
                                                         *ngIf=" node.version !== undefined &&  node.status ==='Running' ">
                                                         <thead>
                                                                 <tr>
-                                                                        <th colspan="2">{{node.node}}</th>
+                                                                        <th colspan="2">{{node.name}}</th>
                                                                 </tr>
                                                         </thead>
                                                         <tbody>
@@ -83,8 +45,8 @@
                                                                       padding-left:32px;  height: 100%; color:#fff;"></i>
                                                                         </td>
                                                                         <td style=" background-color: #58bbee; padding-left:15px;"
-                                                                                *ngIf="node.hasOwnProperty('diagnostics')">
-                                                                                <h5 class="m-a-0"><span>Utilized:</span>
+                                                                                *ngIf="node.diagnostics != null">
+                                                                                <h5><span>Utilized:</span>
                                                                                         {{node.diagnostics.memoryUtilizationPercentage}}
                                                                                 </h5>
                                                                                 <div>Disk:
@@ -98,7 +60,6 @@
                                                         </tbody>
                                                 </table>
                                         </div>
-                                </ng-container>
                         </div>
 
                 </div>

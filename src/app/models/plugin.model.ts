@@ -13,8 +13,6 @@ export class PluginModel {
     HasAp: string;
     nodes?: PluginNodeModel[];
     endPoint: string;
-    node?: NodeModel;
-
 
     public constructor(init?: Partial<PluginModel>) {
         Object.assign(this, init);

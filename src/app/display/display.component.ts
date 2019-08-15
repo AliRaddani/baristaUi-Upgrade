@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Component, OnInit, ɵregisterNgModuleType } from '@angular/core';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BaristaService } from '../services/barista.service';
 import { PluginModel } from '../models/plugin.model';
 // import {Location} from '@angular/common';
@@ -8,7 +8,7 @@ import { PluginModel } from '../models/plugin.model';
   selector: 'app-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.css'],
-  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+  providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }]
 })
 export class DisplayComponent implements OnInit {
 
@@ -27,25 +27,18 @@ export class DisplayComponent implements OnInit {
 
   displayPlugins() {
     this.plugins = this.baristaService.pluginsForDisplay();
-
-    if (this.plugins[0].hasOwnProperty('nodes')) {
-
-      this.title = 'Cluster';
-      this.pName = this.plugins[0].clusterName;
-
-    } else {
-
-      this.title = 'Node';
-      this.pName = this.plugins[0].node.hostName;
+    if (this.baristaService.selectedItem) {
+      this.title = this.baristaService.selectedItem.type;
+      this.pName = this.baristaService.selectedItem.name;
     }
-
   }
+
   ShowHideButton(name: string) {
     console.log(name);
     this.showMainContent = this.showMainContent ? false : true;
     this.pluginName = name;
     console.log('showMainContent', this.showMainContent);
- }
+  }
 
   onSelect(index: number) {
     if (this.selectedIndex === index) {

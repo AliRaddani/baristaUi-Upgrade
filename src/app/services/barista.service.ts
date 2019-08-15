@@ -8,6 +8,7 @@ import { StorageService } from './storage.service';
 import { PluginModel } from '../models/plugin.model';
 import { PluginNodeModel } from '../models/pluginNode.model';
 import { DiagnosticsPluginModel } from '../models/diagnostics-plugin-model';
+import { SelectedItemModel } from '../models/selectedItem.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class BaristaService {
   private storageClusterName = 'clusters';
   public clusters: Array<ClusterModel> = null;
   constructor(private http: HttpClient, private storage: StorageService) { }
-  public plugins: Array<any> = [];
+  public selectedItem: SelectedItemModel;
+  public plugins: Array<PluginModel> = [];
 
   getCluster$(url: string): Observable<ClusterModel> | null {
     const options = {
@@ -47,6 +49,7 @@ export class BaristaService {
     const options = {
       withCredentials: true
     };
+    this.selectedItem = new SelectedItemModel({type: 'Cluster', name: cluster.name});
     const url = cluster.endPoint + '/api/cluster/plugins';
     return this.http.get<any>(url, options).pipe(
       take(1),
@@ -59,7 +62,7 @@ export class BaristaService {
             resultPlugin.Nodes.forEach(resultNode => {
 
               const pluginNode = new PluginNodeModel({
-                status: resultNode.Status, version: resultNode.Version, node: resultNode.Node,
+                status: resultNode.Status, version: resultNode.Version, name: resultNode.Node,
               });
               if (resultNode.hasOwnProperty('Diagnostics')) {
                 const diagnostics = new DiagnosticsPluginModel({
@@ -88,13 +91,14 @@ export class BaristaService {
     const options = {
       withCredentials: true
     };
+    this.selectedItem = new SelectedItemModel({type: 'Node', name: node.hostName});
     const url = 'http://' + node.hostName + ':' + node.port + '/api/plugins';
     return this.http.get<any>(url, options).pipe(
       take(1),
       map((nodePlugin: Array<any>) => {
         nodePlugin.forEach(resultPlugin => {
-          const plugin = new PluginNodeModel({
-            name: resultPlugin.Name, status: resultPlugin.Status, version: resultPlugin.Version, node: node
+          const pluginNode = new PluginNodeModel({
+            name: node.hostName, status: resultPlugin.Status, version: resultPlugin.Version, node
           });
           if (resultPlugin.hasOwnProperty('Diagnostics')) {
             const diagnostics = new DiagnosticsPluginModel({
@@ -105,16 +109,22 @@ export class BaristaService {
               deploymentDiskUsage: resultPlugin.
                 Diagnostics.hasOwnProperty('DeploymentDiskUsage') ? resultPlugin.Diagnostics.DeploymentDiskUsage : null
             });
-            plugin.diagnostics = diagnostics;
+            pluginNode.diagnostics = diagnostics;
           }
+          const plugin = new PluginModel({
+            clusterName: node.hostName,
+            diagnostics: pluginNode.diagnostics,
+            name: pluginNode.name,
+            nodes: [pluginNode],
+            status: pluginNode.status,
+            isMonitored: pluginNode.isMonitored,
+            version: pluginNode.version
+          });
           this.plugins.push(plugin);
         });
         return this.plugins;
-
       }));
   }
-
-  
 
   pluginsForDisplay() {
     const pluginsArray: Array<any> = this.plugins;
