@@ -114,6 +114,8 @@ export class BaristaService {
       }));
   }
 
+  
+
   pluginsForDisplay() {
     const pluginsArray: Array<any> = this.plugins;
     this.plugins = [];

@@ -13,7 +13,6 @@ import { BaristaService } from './services/barista.service';
 import { DisplayComponent } from './display/display.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,8 +27,8 @@ import { DisplayComponent } from './display/display.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule,
-   
+    FormsModule 
+
   ],
   providers: [BaristaService],
   bootstrap: [AppComponent]
