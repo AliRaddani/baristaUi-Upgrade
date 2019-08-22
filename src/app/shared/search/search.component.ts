@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { PluginModel} from '../../models/plugin.model';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class SearchComponent implements OnInit {
 
   constructor() { }
+
+
 
   ngOnInit() {
   }

@@ -19,9 +19,14 @@
   cursor: pointer;
   background-color: #2f3e47;
 }
-
+.active{
+  border: solid 1px blue;
+}
 .accordion-section:hover {
   background-color: darkslategray;
+}
+.accordion-section:visited {
+  border: solid 1px blue;
 }
 
 .side-menu:focus {

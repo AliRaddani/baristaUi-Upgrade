@@ -6,8 +6,42 @@
     height: 1024px;
     overflow: auto;
 }
+.configName{
+    position: relative;
+    display: inline-block;
+    padding: 10px 10px 10px 15px;
+    background: #57c5a5;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+.pluginsDetails{
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    height: 52px;
+    width: 62%;
+    background-color: #f6f8f7;
+    margin-left: 198px;
+    margin-top: 43px;
+    padding: 13px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
+}
 .div {
+    background-color: #f6f8f7;
+    width: 100%;
+    height: 65px;
+    position: fixed;
+    padding-bottom: 10px;
+    color: #6a6b6b;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .3);
+    z-index: 1;
+    margin-top:0px;
+}
+
+.pluginDetailHeader {
     background-color: #f6f8f7;
     width: 100%;
     height: 65px;
@@ -31,6 +65,7 @@
     padding-left: 190px;
     color: #57c5a5;
     margin-bottom: 10px;
+    margin-top:0px;
 }
 
 #btn-refresh {
@@ -43,17 +78,53 @@
     width: 70px;
     border-left: 1px solid lightgray;
     border-right: 1px solid lightgray;
+    font-size: 26px;
+    color: rgb(97, 97, 97);
 }
-#btnBack{
+
+#plug {
+    color: #57c5a5;
+    padding-left: 10px;
+}
+
+#td {
+    background-color: #179de2;
+}
+
+#td1 {
+    background-color: #58bbee;
+    padding-left: 15px;
+}
+
+#meter {
+    padding: 10px;
+    padding-left: 32px;
+    height: 100%;
+    color: #fff;
+}
+
+#btnBack {
     position: absolute;
-    float:left; height: 64px;
+    float: left;
+    height: 64px;
     top: 0px;
     background-color: transparent;
     border: solid #f6f8f7;
     width: 70px;
     border-left: 1px solid lightgray;
     border-right: 1px solid lightgray;
-    size:30px;
+    size: 30px;
+}
+
+#ielement {
+    font-size: 46px;
+    color: rgb(97, 97, 97);
+}
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .plugins {
@@ -67,6 +138,8 @@
     margin-top: 33px;
     padding: 13px;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 h3 {
@@ -78,6 +151,8 @@ h3 {
     font-size: 1.75rem;
     padding-top: 5px;
     padding-bottom: 0px;
+    margin-bottom:0px;
+    
 }
 
 .arrow {
@@ -102,10 +177,15 @@ table {
     color: white;
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 1rem;
+    overflow: auto;
+    width: auto;
+    height: auto
 }
 
 .divTables {
     margin-left: 40px;
+    width: auto;
+    height: auto
 }
 
 thead th {
@@ -117,9 +197,28 @@ thead th {
     border-bottom: solid 1px white;
 }
 
+@media only screen and (max-width: 1650px) {
+    #btn-refresh {
+        margin-left: 500px;
+    }
+}
 
 @media only screen and (max-width: 1200px) {
     #btn-refresh {
-        margin-left: 300px;
+        margin-left: 130px;
+    }
+    .plugins {
+        margin-left: 20px;
+    }
+    .widget {
+        margin-left: 20px;
+    }
+    #clusterName {
+        padding-left: 20px;
+    }
+    #title {
+        padding-left: 20px;
     }
 }
+
+

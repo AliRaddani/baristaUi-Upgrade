@@ -1,8 +1,6 @@
 import { DiagnosticsPluginModel } from './diagnostics-plugin-model';
 import { NodeModel } from './node.model';
 
-
-
 export class PluginNodeModel {
     name: string;
     node: NodeModel;

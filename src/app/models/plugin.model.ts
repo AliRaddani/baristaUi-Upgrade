@@ -1,8 +1,5 @@
 import { DiagnosticsPluginModel } from './diagnostics-plugin-model';
-import { PluginNodeModel } from './pluginNode.model';
-import { NodeModel } from './node.model';
-
-
+import { PluginNodeModel } from './plugin-node.model';
 export class PluginModel {
     clusterName: string;
     name: string;
@@ -13,6 +10,7 @@ export class PluginModel {
     HasAp: string;
     nodes?: PluginNodeModel[];
     endPoint: string;
+    nodeName: string;
 
     public constructor(init?: Partial<PluginModel>) {
         Object.assign(this, init);
@@ -20,28 +18,31 @@ export class PluginModel {
 
     public rollupProperties() {
         if (this.nodes) {
-            this.nodes.filter( node => {
-                return node.status !== 'Deployed';
-            }).map((node) => {
-                if ( node.status === 'Offline') {
-                    this.status = 'Offline';
-                    this.version = '';
-                } else if ( node.status === 'Running') {
-                    this.status = 'Running';
-                    this.version = node.version;
-                } else if (node.status === 'Stopped') {
-                    this.status = 'Stopped';
-                } else if (node.status === 'Installed') {
-                    this.status = 'Installed';
-                    this.version = node.version;
-                }
-            });
+
             if (this.nodes.every(node => node.status === 'Deployed')) {
-                    this.status = 'Deployed';
+                this.status = 'Deployed';
+            } else if (this.nodes.every(node => node.status === 'Running')) {
+                this.status = 'Running';
+
+            } else if (this.nodes.every(node => node.status === 'Offline')) {
+                this.status = 'Offline';
+            } else if (this.nodes.some(node => node.status === 'Installed')) {
+                this.status = 'Installed';
+            } else if (this.nodes.some(node => node.status === 'Running')) {
+                this.status = 'Running';
+            } else if (this.nodes.some(node => node.status === 'Failed')) {
+                this.status = 'Failed';}
+            if (this.nodes && this.nodes.length > 0) {
+                let version;
+                this.nodes.forEach(node => {
+                    if (!version) {
+                        version = node.version;
+                    } else if (node.version !== version) {
+                        version = 'Mixed Version';
+                    }
+                });
+                this.version = version;
             }
-
-
         }
-
     }
 }

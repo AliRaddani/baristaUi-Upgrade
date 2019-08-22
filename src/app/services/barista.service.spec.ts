@@ -1,9 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BaristaService } from './barista.service';
+import { BaristaService } from '../services/barista.service';
 import { NodeModel } from '../models/node.model';
 import { ClusterModel } from '../models/cluster.model';
 import { StorageService } from './storage.service';
+import { PluginModel } from '../models/plugin.model';
+import { PluginNodeModel } from '../models/plugin-node.model';
 
 
 describe('BaristaService', () => {
@@ -46,6 +48,98 @@ describe('BaristaService', () => {
             { HostName: 'asi-barsn5-02.asinetwork.local', IpAddress: '172.25.231.221', Port: 8080 }]
         });
     }));
+
+
+
+  it('should rollup status', () => {
+    const plugin1 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Running' }),
+        new PluginNodeModel({ status: 'Stopped' })
+      ]
+    });
+    const plugin2 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Stopped' }),
+        new PluginNodeModel({ status: 'Running' })
+      ]
+    });
+    const plugin3 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Deployed' }),
+        new PluginNodeModel({ status: 'Deployed' })
+      ]
+    });
+    const plugin4 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Installed' }),
+        new PluginNodeModel({ status: 'Installed' })
+      ]
+    });
+    const plugin5 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Running' }),
+        new PluginNodeModel({ status: 'Running' })
+      ]
+    });
+    const plugin6 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Offline' }),
+        new PluginNodeModel({ status: 'Offline' })
+      ]
+    });
+    const plugin7 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Deployed' }),
+        new PluginNodeModel({ status: 'Running' })
+      ]
+    });
+    const plugin8 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ status: 'Running' }),
+        new PluginNodeModel({ status: 'Deployed' })
+      ]
+    });
+
+    plugin1.rollupProperties();
+    plugin2.rollupProperties();
+    plugin3.rollupProperties();
+    plugin4.rollupProperties();
+    plugin5.rollupProperties();
+    plugin6.rollupProperties();
+    plugin7.rollupProperties();
+    plugin8.rollupProperties();
+
+    expect(plugin1.status).toBe('Running');
+    expect(plugin2.status).toBe('Running');
+    expect(plugin3.status).toBe('Deployed');
+    expect(plugin4.status).toBe('Installed');
+    expect(plugin5.status).toBe('Running');
+    expect(plugin6.status).toBe('Offline');
+    expect(plugin7.status).toBe('Running');
+    expect(plugin8.status).toBe('Running');
+  });
+
+  it('should rollup version', () => {
+    const plugin1 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ version: '1' }),
+        new PluginNodeModel({ version: '1' })
+      ]
+    });
+    const plugin2 = new PluginModel({
+      nodes: [
+        new PluginNodeModel({ version: '1' }),
+        new PluginNodeModel({ version: '2' })
+      ]
+    });
+
+    plugin1.rollupProperties();
+    plugin2.rollupProperties();
+
+    expect(plugin1.version).toBe('1');
+    expect(plugin2.version).toBe('Mixed Version');
+  });
 
   it('should retreive the plugin data', inject([HttpTestingController, BaristaService],
     (httpMock: HttpTestingController, baristaService: BaristaService) => {
@@ -122,7 +216,7 @@ describe('BaristaService', () => {
               },
               {
                 Node: 'asi-barsn2-02.asinetwork.local:8080',
-                Status: 'Running',
+                Status: 'Deployed',
                 Version: '20180904-1130',
                 Diagnostics: {
                   PluginMemory: '628 bytes',
@@ -162,6 +256,126 @@ describe('BaristaService', () => {
           IsMonitored: true,
           HasApi: true
         }]
+      );
+    }));
+
+  it('should retrieve the plugin config data', inject([HttpTestingController, BaristaService],
+    (httpMock: HttpTestingController, baristaService: BaristaService) => {
+      const clusterPluginName = 'ASI.Barista.Plugins.Connect.Jobs.Plugin';
+      baristaService.getClusterPluginConfigs$(clusterPluginName).subscribe(config => {
+        expect(config).toBeTruthy();
+        expect(config.length).toBeGreaterThan(1);
+        expect(config[0].appSettings.EnvironmentName).toBe('STAGE');
+        expect(config[1].nodeName).toBe('asi-barsn2-02.asinetwork.local:8080');
+
+      });
+
+      const nodePluginName = 'ASI.Barista.Plugins.Connect.Notifications';
+      baristaService.getNodePluginConfig$(nodePluginName).subscribe(config => {
+        expect(config).toBeTruthy();
+        expect(config[0].appSettings.DailyCreditAlertSchedule).toBe('0 30 6 * * ?');
+
+
+
+      });
+      httpMock.expectOne({
+        url: 'http://asi-barsn1-02.asinetwork.local:8080/api/cluster/ASI.Barista.Plugins.Connect.Jobs.Plugin/config',
+        method: 'GET'
+      }).flush(
+        [
+          {
+            Node: 'asi-barsn1-02.asinetwork.local:8080',
+            Response: {
+              AppSettings: {
+                // tslint:disable-next-line: max-line-length
+                EsbConnectionString: 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser',
+                // tslint:disable-next-line: max-line-length
+                'EsbConnectionString:Scheduler': 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser;prefetchcount=5',
+                PostLoadSchedule: '0 0 5 * * ?',
+                EnvironmentName: 'STAGE',
+                FromEmail: 'stage-creditconnect@asicentral.com',
+                SOSRecipients: 'ahameed@asicentral.com,ORifat@asicentral.com'
+              },
+              ConnectionStrings: {
+                // tslint:disable-next-line: max-line-length
+                CreditConnectContext: 'Data Source=ASI-SQLSS-11.asinetwork.local;Initial Catalog=Connect;User ID=********;Password=********'
+              }
+            },
+            StatusCode: 'OK',
+            IsSuccess: true,
+            ReasonPhrase: 'OK'
+          },
+          {
+            Node: 'asi-barsn2-02.asinetwork.local:8080',
+            Response: {
+              AppSettings: {
+                // tslint:disable-next-line: max-line-length
+                EsbConnectionString: 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser',
+                // tslint:disable-next-line: max-line-length
+                'EsbConnectionString:Scheduler': 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser;prefetchcount=5',
+                PostLoadSchedule: '0 0 5 * * ?',
+                EnvironmentName: 'STAGE',
+                FromEmail: 'stage-creditconnect@asicentral.com',
+                SOSRecipients: 'ahameed@asicentral.com,ORifat@asicentral.com'
+              },
+              ConnectionStrings: {
+                // tslint:disable-next-line: max-line-length
+                CreditConnectContext: 'Data Source=ASI-SQLSS-11.asinetwork.local;Initial Catalog=Connect;User ID=********;Password=********'
+              }
+            },
+            StatusCode: 'OK',
+            IsSuccess: true,
+            ReasonPhrase: 'OK'
+          }
+        ]
+      );
+      httpMock.expectOne({
+        url: 'http://asi-barsn1-02.asinetwork.local:8080/api/plugins/ASI.Barista.Plugins.Connect.Jobs.Plugin/config',
+        method: 'GET'
+      }).flush(
+        [
+          {
+            AppSettings: {
+              // tslint:disable-next-line: max-line-length
+              EsbConnectionString: 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser',
+              // tslint:disable-next-line: max-line-length
+              'EsbConnectionString:Scheduler': 'host=asi-rabbitscn1-04.asinetwork.local,asi-rabbitscn2-04.asinetwork.local;username=asiuser;password=asiuser;prefetchcount=5',
+              MonitorListSchedule: '0 0 6 * * ?',
+              DailyCreditAlertSchedule: '0 30 6 * * ?',
+              EnvironmentName: 'STAGE',
+              TestDailyEmailTo: 'STG-ConnectNonASI@asicentral.com,ahameed@asicentral.com,imahmood@asicentral.com,orifat@asicentral.com',
+              AppUrl: 'https://connect.stage-asicentral.com',
+              ContactUs: 'https://www.asicentral.com/asp/open/CustomerSupport/support.aspx',
+              FeedBackLink: 'support@asicentral.com',
+              FeedBackSubject: 'Feedback',
+              ASIMagazines: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=7',
+              Connect: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=18',
+              ESPWeb: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=103',
+              ESPAdvertising: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=24',
+              ESPWebsites: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=22',
+              EmailExpress: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=153',
+              ASISalesPro: ' https://www.asicentral.com/ASIStore/products.aspx?prodID=193',
+              ASICentral: ' https://www.asicentral.com/',
+              TimAndrewsBlog: 'https://www.asicentral.com/news/blogs/tims-blog/',
+              ASIFacebook: 'https://www.facebook.com/pages/ASICentral/55248546043',
+              ASIYouTube: 'https://www.youtube.com/user/asicentral',
+              ASITwitter: 'https://twitter.com/asicentral',
+              AboutASI: 'https://www.asicentral.com/asp/open/AboutASI/default.aspx',
+              PressReleases: 'https://www.asicentral.com/asp/open/AboutASI/pressRoom/default.aspx',
+              ASICareers: 'https://www.asicentral.com/asicareers/index.asp',
+              DailyMonitorListEmailFrom: 'stage-creditinfo@asicentral.com',
+              DailyMonitorListEmailFromName: 'stage-creditinfo@asicentral.com',
+              DailyCreditAlertEmailFrom: 'stage-creditalert@asicentral.com',
+              DailyCreditAlertEmailFromName: 'stage-creditalert@asicentral.com',
+              SOSEmailFrom: 'stage-creditconnect@asicentral.com',
+              SOSEmailFromName: 'stage-creditconnect@asicentral.com',
+              SOSEmailTo: 'ahameed@asicentral.com,ORifat@asicentral.com',
+              MediaServerPath: '\\\\10.1.0.243\\MediaProjects\\Barista\\STAGE\\CreditConnect'
+            },
+            ConnectionStrings: {
+              CreditConnectContext: 'Data Source=ASI-SQLSS-11.asinetwork.local;Initial Catalog=Connect;User ID=********;Password=********'
+            }
+          }]
       );
     }));
 });

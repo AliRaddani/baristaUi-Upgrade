@@ -10,8 +10,8 @@ import { NodeModel } from 'src/app/models/node.model';
 export class ClusterComponent implements OnInit {
 
   accordianClicked = false;
-
   constructor() { }
+ 
 
   @Input() clusters: ClusterModel[] = [];
   @Output() clickClusterPlugins = new EventEmitter<object>();

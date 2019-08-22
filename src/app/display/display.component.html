@@ -1,26 +1,30 @@
 <div id="div-display">
-        <div *ngIf="showMainContent"  class = "displayPlugins">
-                <div class="div"  >
-                        <h3>{{title}}</h3>
+        <div *ngIf="showMainContent" class="displayPlugins">
+                <div class="div">
+                        <h3 id="title">{{title}}</h3>
                         <h6 id="clusterName">{{pName}}</h6>
                         <button id="btn-refresh" (click)="displayPlugins()">
                                 <i class='fas fa-sync' style='font-size:26px;color:rgb(97, 97, 97)'></i></button>
                 </div>
                 <br><br><br>
                 <div *ngFor="let plugin of plugins; let i = index;">
-                        <div class="container-fixed  plugins" >
+                        <div class="container-fluid  plugins">
                                 <div class=" row">
-                                        <div class="col-7 "> <i class="fa fa-lg fa-plug   " aria-hidden="true"
-                                                        style="color:#57c5a5; padding-left: 10px;"></i>
-                                                <span id="pluginName" (click)="ShowHideButton(plugin.name)"><strong>{{plugin.name}}</strong></span></div>
-                                        <div class="col-1"> <span
-                                                        [ngStyle]="{'color':plugin.status === 'Running' ? 'rgb(92, 184, 92)': '#6a6b6b' }">{{plugin.status}}</span>
+                                        <div class="col-7 ellipsis"> <i id="plug" class="fa fa-lg fa-plug   "
+                                                        aria-hidden="true">
+                                                </i>
+                                                <span id="pluginName" class="ellipsis"
+                                                        (click)="showPluginConfigData(plugin.name)"><strong>{{plugin.name}}</strong></span>
                                         </div>
-                                        <div class="col-3" style=" color: #818a91;"
-                                                [ngStyle]="{'visibility':plugin.status ==='Deployed' || plugin.status ==='Offline' ? 'hidden' : 'visible' }">
+                                        <div class="col-1  "> <span
+                                                        [ngStyle]="{'color':getColor(plugin.status)}">{{plugin.status}}</span>
+                                        </div>
+                                        <div class="col-3 ellipsis" style=" color: #818a91;"
+                                                [ngStyle]="{'visibility':plugin.status ==='Deployed'|| plugin.status === 'Failed' || plugin.status ==='Offline' ? 'hidden' : 'visible' }">
                                                 Version: {{plugin.version}}</div>
-                                        <div class="col-1"
-                                                [ngStyle]="{'visibility':plugin.status ==='Deployed' || plugin.status ==='Offline' ? 'hidden' : 'visible' }">
+                                        <div class="col-1  ellipsis"
+                                                [ngStyle]="{'visibility': plugin.status ==='Deployed' || plugin.status ==='Offline'  
+                                                || plugin.status === 'Failed'|| plugin.status === 'Installed' ? 'hidden' : 'visible' }">
                                                 <i (click)="onSelect(i)" class="fa fa-lg  arrow"
                                                         [ngClass]="{'fa-caret-down' : selectedIndex !== i, 'fa-caret-up' : selectedIndex === i }"></i>
                                         </div>
@@ -28,64 +32,85 @@
 
                         </div>
                         <div *ngIf="selectedIndex === i" class="widget">
-                                        <div class="divTables" *ngFor=" let node of plugin.nodes">
+                                <div class="divTables" *ngFor=" let node of plugin.nodes">
 
-                                                <table class="table table-striped"
-                                                        *ngIf=" node.version !== undefined &&  node.status ==='Running' ">
-                                                        <thead>
-                                                                <tr>
-                                                                        <th colspan="2">{{node.name}}</th>
-                                                                </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                                <tr>
-                                                                        <td style=" background-color:#179de2;">
-                                                                                <i class="fas fa-3x fa-tachometer-alt"
-                                                                                        style=" padding: 10px;
-                                                                      padding-left:32px;  height: 100%; color:#fff;"></i>
-                                                                        </td>
-                                                                        <td style=" background-color: #58bbee; padding-left:15px;"
-                                                                                *ngIf="node.diagnostics != null">
-                                                                                <h5><span>Utilized:</span>
-                                                                                        {{node.diagnostics.memoryUtilizationPercentage}}
-                                                                                </h5>
-                                                                                <div>Disk:
-                                                                                        {{node.diagnostics.pluginDiskUsage}}
-                                                                                </div>
-                                                                                <div>Deploy:
-                                                                                        {{node.diagnostics.deploymentDiskUsage}}
-                                                                                </div>
-                                                                        </td>
-                                                                </tr>
-                                                        </tbody>
-                                                </table>
-                                        </div>
+                                        <table class="table table-striped"
+                                                *ngIf=" node.version !== undefined &&  node.status ==='Running' ">
+                                                <thead>
+                                                        <tr>
+                                                                <th colspan="2">{{node.name}}</th>
+                                                        </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <tr>
+                                                                <td id='td'>
+                                                                        <i id="meter"
+                                                                                class="fas fa-3x fa-tachometer-alt"></i>
+                                                                </td>
+                                                                <td id="td1" *ngIf="node.diagnostics != null">
+
+                                                                        <div>Version:
+                                                                                {{node.version}}
+                                                                        </div>
+                                                                        <div>Utilized:
+                                                                                {{node.diagnostics.memoryUtilizationPercentage}}
+                                                                        </div>
+                                                                        <div>Disk:
+                                                                                {{node.diagnostics.pluginDiskUsage}}
+                                                                        </div>
+                                                                        <div>Deploy:
+                                                                                {{node.diagnostics.deploymentDiskUsage}}
+                                                                        </div>
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </div>
                         </div>
 
                 </div>
         </div>
-       
-        <div class="displayPluginDetail"   *ngIf="!showMainContent" >
 
-      <div class="div"  >
-                <button id="btnBack"  class="button-icon"  (click)="goBack()" >
+        <div class="displayPluginDetail" *ngIf="!showMainContent">
 
-                                <i class="fa fa-angle-left fa-3x" style='font-size:46px;color:rgb(97, 97, 97)'></i></button>
-                                
-        <h3>Plugin Details</h3>
-        <h6 id="clusterName">{{pluginName}}</h6>
-        <!-- <div class="pull-left">
-                <div class="header-button back-button" (click)="goBack()">
-                    <div class="button-icon">
-                        <i class="fa fa-angle-left fa-3x"></i>
-                    </div>
-                    <span class="button-subtext">Back</span>
+                <div class="pluginDetailHeader">
+                        <button id="btnBack" class="button-icon" (click)="goBack()">
+
+                                <i id='ielement' class="fa fa-angle-left fa-3x"></i></button>
+                        <h3>Plugin Details</h3>
+                        <h6 id="clusterName" class="plugin">{{pluginName}}</h6>
+                        <button id="btn-refresh"><i class='fas fa-sync'></i></button>
+
+<div  *ngFor="let config of clusterPluginconfigs" >
+                        <div class="container-fluid  pluginsDetails"  >
+                                        <div class=" row">
+                                                <div class="col-4 ellipsis configName"> 
+                                                        <span >{{config.nodeName}}</span>
+                                                </div>
+                                                <div class="col-1  "> <span>AppSettings</span>
+                                                </div>
+                                                <div class="col-1 ellipsis" >
+                                                        </div>
+                                                <div class="col-6">ConnectionString</div>
+                                                </div>
+                                        </div>
+        
+                              
+                        <div class="container" *ngFor="let a of appSettings">
+                                <div class="row">
+                                        <div class="col-xs-6">{{a.key}}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="col-xs-6">{{a.value}}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                        </div>
+                        <br><br><br>
+                        <div class="container" *ngFor="let b of connectionStrings">
+                                <div class="row">
+                                        <div class="col-xs-6">{{b.key}}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="col-xs-6">{{b.value}}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                </div>
+                        </div>
+
                 </div>
-            </div> -->
-        <button id="btn-refresh"     >
-                <i (click)="goBack()" class='fas fa-sync' style='font-size:26px;color:rgb(97, 97, 97)'></i></button>
-
-<div>fhfhfdhfhddfffffffffffffffffffff<br>fgggggggggggggggggggggggg</div>
         </div>
-</div>
 </div>

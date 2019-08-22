@@ -1,14 +1,14 @@
 <div class="side-menu">
     <div id="accordion">
         <app-cluster (clickClusterPlugins)="getClusterPlugins($event)" (clickNodePlugins)="getNodePlugins($event)"   [clusters]="clusters"  ></app-cluster>
-        <div class="accordion-section">
+        <div class="accordion-section" >
             <div class="section-header  deploybtn">
                 <a class="anker" href=""> <i class="fa fa-cloud"></i>
                     <span>&nbsp;&nbsp;&nbsp;Deploy</span></a>
             </div>
         </div>
 
-        <div class="accordion-section open " data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+        <div class="accordion-section open  " data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
             aria-controls="collapseTwo" (click)="accordianTwoClicked  = !accordianTwoClicked">
 
             <div class="section-header">

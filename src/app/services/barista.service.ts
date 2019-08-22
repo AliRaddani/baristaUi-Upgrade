@@ -6,9 +6,10 @@ import { ClusterModel } from '../models/cluster.model';
 import { NodeModel } from '../models/node.model';
 import { StorageService } from './storage.service';
 import { PluginModel } from '../models/plugin.model';
-import { PluginNodeModel } from '../models/pluginNode.model';
+import { PluginNodeModel } from '../models/plugin-node.model';
 import { DiagnosticsPluginModel } from '../models/diagnostics-plugin-model';
 import { SelectedItemModel } from '../models/selectedItem.model';
+import { PluginNodeConfigModel } from '../models/plugin-node-config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class BaristaService {
   constructor(private http: HttpClient, private storage: StorageService) { }
   public selectedItem: SelectedItemModel;
   public plugins: Array<PluginModel> = [];
-
+  public clusterPluginConfigurations: Array<PluginNodeConfigModel> = [];
+  public isCluster: boolean;
   getCluster$(url: string): Observable<ClusterModel> | null {
     const options = {
       withCredentials: true
@@ -49,7 +51,7 @@ export class BaristaService {
     const options = {
       withCredentials: true
     };
-    this.selectedItem = new SelectedItemModel({type: 'Cluster', name: cluster.name});
+    this.selectedItem = new SelectedItemModel({ type: 'Cluster', name: cluster.name });
     const url = cluster.endPoint + '/api/cluster/plugins';
     return this.http.get<any>(url, options).pipe(
       take(1),
@@ -83,23 +85,25 @@ export class BaristaService {
           }
           this.plugins.push(plugin);
         });
+        this.isCluster = true;
         return this.plugins;
       }));
   }
 
-  getNodePlugins$( node: NodeModel): Observable<PluginModel[]> {
+  getNodePlugins$(node: NodeModel): Observable<PluginModel[]> {
     const options = {
       withCredentials: true
     };
-    this.selectedItem = new SelectedItemModel({type: 'Node', name: node.hostName});
+    this.selectedItem = new SelectedItemModel({ type: 'Node', name: node.hostName });
     const url = 'http://' + node.hostName + ':' + node.port + '/api/plugins';
     return this.http.get<any>(url, options).pipe(
       take(1),
       map((nodePlugin: Array<any>) => {
         nodePlugin.forEach(resultPlugin => {
           const pluginNode = new PluginNodeModel({
-            name: node.hostName, status: resultPlugin.Status, version: resultPlugin.Version, node
+            name: resultPlugin.Name, status: resultPlugin.Status, version: resultPlugin.Version, node
           });
+
           if (resultPlugin.hasOwnProperty('Diagnostics')) {
             const diagnostics = new DiagnosticsPluginModel({
               memoryUtilizationPercentage: resultPlugin.
@@ -114,14 +118,16 @@ export class BaristaService {
           const plugin = new PluginModel({
             clusterName: node.hostName,
             diagnostics: pluginNode.diagnostics,
-            name: pluginNode.name,
+            name: resultPlugin.Name,
+
             nodes: [pluginNode],
             status: pluginNode.status,
             isMonitored: pluginNode.isMonitored,
-            version: pluginNode.version
+            version: pluginNode.version,
           });
           this.plugins.push(plugin);
         });
+        this.isCluster = false;
         return this.plugins;
       }));
   }
@@ -129,7 +135,6 @@ export class BaristaService {
   pluginsForDisplay() {
     const pluginsArray: Array<any> = this.plugins;
     this.plugins = [];
-
     return pluginsArray;
   }
 
@@ -148,5 +153,48 @@ export class BaristaService {
     if (this.clusters === null) {
       this.clusters = [];
     }
+  }
+
+  getClusterPluginConfigs$(plugName: string): Observable<PluginNodeConfigModel[]> {
+    const options = {
+      withCredentials: true
+    };
+    const url = 'http://asi-barsn1-02.asinetwork.local:8080/api/cluster/' + plugName + '/config';
+    // const url = `http://{plugin.nodeName}/api/plugins/{pluginName}/config`;
+    return this.http.get<any>(url, options).pipe(
+      take(1),
+      map((clusterPluginConfig: Array<any>) => {
+        this.clusterPluginConfigurations = [];
+        clusterPluginConfig.forEach(config => {
+          const configuration = new PluginNodeConfigModel({
+            nodeName: config.Node, appSettings: config.Response.AppSettings, connectionStrings: config.Response.ConnectionStrings
+          });
+
+          this.clusterPluginConfigurations.push(configuration);
+        });
+        return this.clusterPluginConfigurations;
+      }));
+  }
+
+  getNodePluginConfig$(plugName: string, node: PluginModel[]): Observable<PluginNodeConfigModel[]> {
+    const options = {
+      withCredentials: true
+    };
+    const url = 'http://' + node[0].clusterName + ':8080/api/plugins/' + plugName + '/config';
+    // const url = `http://{plugin.nodeName}/api/plugins/{pluginName}/config`;
+    return this.http.get<any>(url, options).pipe(
+      take(1),
+      map(clusterPluginConfig => {
+        this.clusterPluginConfigurations = [];
+        const configuration = new PluginNodeConfigModel({
+
+          nodeName: node[0].clusterName, appSettings: clusterPluginConfig.AppSettings, 
+          connectionStrings: clusterPluginConfig.ConnectionStrings
+        });
+
+        this.clusterPluginConfigurations.push(configuration);
+
+        return this.clusterPluginConfigurations;
+      }));
   }
 }
